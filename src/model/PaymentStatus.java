@@ -4,3 +4,4 @@ public enum PaymentStatus {
     PENDING_PAYMENT,
     PAID
 }
+

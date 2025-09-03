@@ -4,3 +4,4 @@ public enum OrderStatus {
     OPEN,
     FINALIZED
 }
+

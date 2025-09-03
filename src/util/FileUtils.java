@@ -36,4 +36,11 @@ public class FileUtils {
             }
         }
     }
+
+    public static void appendLine(String filePath, String line) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(line);
+            writer.newLine();
+        }
+    }
 }

@@ -1,8 +1,6 @@
 package util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,5 +26,14 @@ public class FileUtils {
             }
         }
         return fileLines;
+    }
+
+    public static void writeLines(String filePath, List<String> lines) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
+            for (String lineToWrite : lines) {
+                writer.write(lineToWrite);
+                writer.newLine();
+            }
+        }
     }
 }

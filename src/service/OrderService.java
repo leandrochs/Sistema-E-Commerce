@@ -57,7 +57,7 @@ public class OrderService {
             throw new IllegalArgumentException("Não é possível adicionar itens a um pedido que não esteja 'OPEN'. Status atual: " + order.getStatus());
         }
 
-        Optional<Product> productOptional = productRepository.findById(productId); // Pode precisar buscar o Product [1]
+        Optional<Product> productOptional = productRepository.findById(productId);
         if (productOptional.isEmpty()) {
             throw new IllegalArgumentException("Produto com ID " + productId + " não encontrado.");
         }
@@ -83,7 +83,30 @@ public class OrderService {
         System.out.println("--------------------------------------------------");
     }
 
-    public void removeItemFromOrder(String orderId, String productId) {}
+    public void removeItemFromOrder(String orderId, String productId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isEmpty()) {
+            throw new IllegalArgumentException("Pedido com ID " + orderId + " não encontrado.");
+        }
+        Order order = orderOptional.get();
+
+        if (order.getStatus() != OrderStatus.OPEN) {
+            throw new IllegalArgumentException("Não é possível remover itens de um pedido que não esteja 'OPEN'. Status atual: " + order.getStatus());
+        }
+
+        boolean removed = order.getItems().removeIf(item -> item.getProduct().getId().equals(productId));
+
+        if (removed) {
+            orderRepository.update(order);
+            System.out.println("--------------------------------------------------");
+            System.out.println("Item com ID '" + productId + "' removido do pedido (ID: " + order.getId() + ").");
+            System.out.println("--------------------------------------------------");
+        } else {
+            System.out.println("--------------------------------------------------");
+            System.out.println("Item com ID '" + productId + "' não encontrado no pedido (ID: " + order.getId() + "). Nenhuma alteração.");
+            System.out.println("--------------------------------------------------");
+        }
+    }
 
     public void updateItemQuantity(String orderId, String productId, int newQuantity) {}
 

@@ -15,7 +15,15 @@ public class CustomerService {
         this.idGenerator = idGenerator;
     }
 
-    public void registerCustomer(String name, String identificationDocument) {}
+    public void registerCustomer(String name, String identificationDocument) {
+        if (identificationDocument == null || identificationDocument.trim().isEmpty()) {
+            throw new IllegalArgumentException("O documento de identificação é obrigatório para o cadastro do cliente.");
+        }
+
+        String id = idGenerator.generateId();
+        Customer customer = new Customer(id, name, identificationDocument);
+        customerRepository.save(customer);
+    }
 
     public Optional<Customer> findCustomerById(String id) {}
 

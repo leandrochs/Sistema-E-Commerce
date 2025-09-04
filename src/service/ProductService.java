@@ -25,7 +25,9 @@ public class ProductService {
         System.out.println("--------------------------------------------------");
     }
 
-    public Optional<Product> findProductById(String id) {}
+    public Optional<Product> findProductById(String id) {
+        return productRepository.findById(id);
+    }
 
     public List<Product> listAllProducts() {}
 

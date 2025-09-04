@@ -6,47 +6,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CustomerFileRepository implements ICustomerRepository {
-    private final String fileName = "customers.txt";
+    private final String filePath = "customers.txt";
 
     @Override
     public void save(Customer customer) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            writer.write(customer.getId() + ";" + customer.getName() + ";" + customer.getIdentificationDocument());
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<Customer> customers = findAll();
+        customers.add(customer);
+        writeAll(customers);
     }
 
     @Override
     public Optional<Customer> findById(UUID id) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(";");
-                UUID customerId = UUID.fromString(data[0]);
-                if (customerId.equals(id)) {
-                    return Optional.of(new Customer(customerId, data[1], data[2]));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+        return findAll().stream()
+                .filter(c -> c.getId().equals(id))
+                .findFirst();
     }
 
     @Override
     public List<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(";");
-                customers.add(new Customer(UUID.fromString(data[0]), data[1], data[2]));
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            while (true) {
+                try {
+                    customers.add((Customer) ois.readObject());
+                } catch (EOFException e) {
+                    break;
+                }
             }
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
+
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return customers;
@@ -55,21 +47,23 @@ public class CustomerFileRepository implements ICustomerRepository {
     @Override
     public void update(Customer customer) {
         List<Customer> customers = findAll();
+        List<Customer> updatedCustomers = customers.stream()
+                .map(c -> c.getId().equals(customer.getId()) ? customer : c)
+                .collect(Collectors.toList());
+        writeAll(updatedCustomers);
+    }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
+    private void writeAll(List<Customer> customers) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
             for (Customer c : customers) {
-                if (c.getId().equals(customer.getId())) {
-                    writer.write(customer.getId() + ";" + customer.getName() + ";" + customer.getIdentificationDocument());
-                } else {
-                    writer.write(c.getId() + ";" + c.getName() + ";" + c.getIdentificationDocument());
-                }
-                writer.newLine();
+                oos.writeObject(c);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
+
 
 
 

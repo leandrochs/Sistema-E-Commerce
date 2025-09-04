@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class OrderItem {
-
+public class OrderItem implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final UUID id;
     private final Product product;
     private int quantity;
@@ -17,5 +18,18 @@ public class OrderItem {
         this.saleValue = saleValue;
     }
 
+    public UUID getId() {
+        return id;
+    }
+    public Product getProduct() {
+        return product;
+    }
+    public int getQuantity() {
+        return quantity;
+    }
+    public BigDecimal getSaleValue() {
+        return saleValue;
+    }
 }
+
 

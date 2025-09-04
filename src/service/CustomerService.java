@@ -33,7 +33,9 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public void updateCustomer(Customer customer) {}
+    public void updateCustomer(Customer customer) {
+        customerRepository.update(customer);
+    }
 
 
 

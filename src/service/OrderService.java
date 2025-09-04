@@ -225,6 +225,9 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-
-
+    private BigDecimal calculateOrderTotal(Order order) {
+        return order.getItems().stream()
+                .map(item -> item.getSaleValue().multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

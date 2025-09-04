@@ -1,10 +1,9 @@
 package service;
 
-import model.Customer;
-import model.Order;
-import model.OrderStatus;
+import model.*;
 import util.IdGenerator;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,42 @@ public class OrderService {
         return order;
     }
 
-    public void addItemToOrder(String orderId, String productId, int quantity, double saleValue) {}
+    public void addItemToOrder(String orderId, String productId, int quantity, BigDecimal saleValue) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isEmpty()) {
+            throw new IllegalArgumentException("Pedido com ID " + orderId + " não encontrado.");
+        }
+        Order order = orderOptional.get();
+
+        if (order.getStatus() != OrderStatus.OPEN) {
+            throw new IllegalArgumentException("Não é possível adicionar itens a um pedido que não esteja 'OPEN'. Status atual: " + order.getStatus());
+        }
+
+        Optional<Product> productOptional = productRepository.findById(productId); // Pode precisar buscar o Product [1]
+        if (productOptional.isEmpty()) {
+            throw new IllegalArgumentException("Produto com ID " + productId + " não encontrado.");
+        }
+        Product product = productOptional.get();
+
+        Optional<OrderItem> existingItem = order.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst();
+
+        if (existingItem.isPresent()) {
+            OrderItem itemToUpdate = existingItem.get();
+            itemToUpdate.setQuantity(itemToUpdate.getQuantity() + quantity);
+            System.out.println("Quantidade do item '" + product.getName() + "' atualizada no pedido " + order.getId());
+        } else {
+            OrderItem newItem = new OrderItem(product, quantity, saleValue);
+            order.getItems().add(newItem);
+            System.out.println("Item '" + product.getName() + "' adicionado ao pedido " + order.getId());
+        }
+
+        orderRepository.update(order);
+        System.out.println("--------------------------------------------------");
+        System.out.println("Item '" + product.getName() + "' adicionado/atualizado no pedido (ID: " + order.getId() + "). Quantidade: " + quantity + ", Valor de Venda: " + saleValue);
+        System.out.println("--------------------------------------------------");
+    }
 
     public void removeItemFromOrder(String orderId, String productId) {}
 

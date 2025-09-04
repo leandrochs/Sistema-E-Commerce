@@ -34,6 +34,14 @@ public class Order {
         return id;
     }
 
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }

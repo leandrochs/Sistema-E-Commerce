@@ -189,7 +189,33 @@ public class OrderService {
         System.out.println("--------------------------------------------------");
     }
 
-    public void registerDelivery(String orderId) {}
+    public void registerDelivery(String orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isEmpty()) {
+            throw new IllegalArgumentException("Pedido com ID " + orderId + " não encontrado.");
+        }
+        Order order = orderOptional.get();
+
+        if (order.getPaymentStatus() != PaymentStatus.PAID) {
+            throw new IllegalArgumentException("Não é possível registrar entrega para um pedido que não esteja 'PAID'. Status atual do pagamento: " + order.getPaymentStatus());
+        }
+
+        if (order.getStatus() == OrderStatus.FINALIZED) {
+            System.out.println("--------------------------------------------------");
+            System.out.println("Pedido (ID: " + order.getId() + ") já se encontra com status 'FINALIZED'. Nenhuma alteração.");
+            System.out.println("--------------------------------------------------");
+            return;
+        }
+
+        order.setStatus(OrderStatus.FINALIZED);
+        orderRepository.update(order);
+
+        notificationService.sendDeliveryNotification(order.getCustomer(), order);
+
+        System.out.println("--------------------------------------------------");
+        System.out.println("Entrega do pedido (ID: " + order.getId() + ") registrada. Status do pedido: " + order.getStatus());
+        System.out.println("--------------------------------------------------");
+    }
 
     public Optional<Order> findOrderById(String id) {}
 

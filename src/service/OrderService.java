@@ -108,7 +108,35 @@ public class OrderService {
         }
     }
 
-    public void updateItemQuantity(String orderId, String productId, int newQuantity) {}
+    public void updateItemQuantity(String orderId, String productId, int newQuantity) {
+        if (newQuantity <= 0) {
+            throw new IllegalArgumentException("A nova quantidade deve ser maior que zero.");
+        }
+
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isEmpty()) {
+            throw new IllegalArgumentException("Pedido com ID " + orderId + " não encontrado.");
+        }
+        Order order = orderOptional.get();
+
+        if (order.getStatus() != OrderStatus.OPEN) {
+            throw new IllegalArgumentException("Não é possível alterar a quantidade de itens em um pedido que não esteja 'OPEN'. Status atual: " + order.getStatus());
+        }
+
+        Optional<OrderItem> itemToUpdate = order.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst();
+
+        if (itemToUpdate.isPresent()) {
+            itemToUpdate.get().setQuantity(newQuantity);
+            orderRepository.update(order);
+            System.out.println("--------------------------------------------------");
+            System.out.println("Quantidade do item '" + itemToUpdate.get().getProduct().getName() + "' no pedido (ID: " + order.getId() + ") atualizada para " + newQuantity + ".");
+            System.out.println("--------------------------------------------------");
+        } else {
+            throw new IllegalArgumentException("Item com ID '" + productId + "' não encontrado no pedido (ID: " + order.getId() + ").");
+        }
+    }
 
     public void finalizeOrder(String orderId) {}
 

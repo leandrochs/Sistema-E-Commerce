@@ -221,7 +221,9 @@ public class OrderService {
         return orderRepository.findById(id);
     }
 
-    public List<Order> listAllOrders() {}
+    public List<Order> listAllOrders() {
+        return orderRepository.findAll();
+    }
 
 
 

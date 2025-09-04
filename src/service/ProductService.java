@@ -29,7 +29,9 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public List<Product> listAllProducts() {}
+    public List<Product> listAllProducts() {
+        return productRepository.findAll();
+    }
 
     public void updateProduct(Product product) {}
 

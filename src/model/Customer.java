@@ -1,7 +1,5 @@
 package model;
 
-import java.util.UUID;
-
 public class Customer {
 
 	private String id;
@@ -22,6 +20,3 @@ public class Customer {
         return name;
     }
 }
-
-
-

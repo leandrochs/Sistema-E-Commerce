@@ -45,5 +45,13 @@ public class Order {
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
 }
 

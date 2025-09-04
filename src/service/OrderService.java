@@ -138,7 +138,35 @@ public class OrderService {
         }
     }
 
-    public void finalizeOrder(String orderId) {}
+    public void finalizeOrder(String orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isEmpty()) {
+            throw new IllegalArgumentException("Pedido com ID " + orderId + " não encontrado.");
+        }
+        Order order = orderOptional.get();
+
+        if (order.getStatus() != OrderStatus.OPEN) {
+            throw new IllegalArgumentException("Não é possível finalizar um pedido que não esteja 'OPEN'. Status atual: " + order.getStatus());
+        }
+
+        if (order.getItems().isEmpty()) {
+            throw new IllegalArgumentException("Não é possível finalizar um pedido sem itens.");
+        }
+
+        BigDecimal totalValue = calculateOrderTotal(order);
+        if (totalValue.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Não é possível finalizar um pedido com valor total menor ou igual a zero. Valor total: " + totalValue);
+        }
+
+        order.setPaymentStatus(PaymentStatus.PENDING_PAYMENT);
+        orderRepository.update(order);
+
+        notificationService.sendPaymentPendingNotification(order.getCustomer(), order);
+
+        System.out.println("--------------------------------------------------");
+        System.out.println("Pedido (ID: " + order.getId() + ") finalizado. Status de pagamento: " + order.getPaymentStatus());
+        System.out.println("--------------------------------------------------");
+    }
 
     public void processPayment(String orderId) {}
 

@@ -9,7 +9,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CustomerFileRepository implements ICustomerRepository {
-    private final String filePath = "customers.txt";
+    private final String fileName = "customers.txt";
 
     @Override
     public void save(Customer customer) {
@@ -28,7 +28,7 @@ public class CustomerFileRepository implements ICustomerRepository {
     @Override
     public List<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
             while (true) {
                 try {
                     customers.add((Customer) ois.readObject());
@@ -54,7 +54,7 @@ public class CustomerFileRepository implements ICustomerRepository {
     }
 
     private void writeAll(List<Customer> customers) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
             for (Customer c : customers) {
                 oos.writeObject(c);
             }

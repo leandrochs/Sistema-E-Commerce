@@ -46,6 +46,10 @@ public class Order {
         return creationDate;
     }
 
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }

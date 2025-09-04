@@ -168,7 +168,26 @@ public class OrderService {
         System.out.println("--------------------------------------------------");
     }
 
-    public void processPayment(String orderId) {}
+    public void processPayment(String orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isEmpty()) {
+            throw new IllegalArgumentException("Pedido com ID " + orderId + " não encontrado.");
+        }
+        Order order = orderOptional.get();
+
+        if (order.getPaymentStatus() != PaymentStatus.PENDING_PAYMENT) {
+            throw new IllegalArgumentException("Não é possível processar pagamento para um pedido que não esteja 'PENDING_PAYMENT'. Status atual: " + order.getPaymentStatus());
+        }
+
+        order.setPaymentStatus(PaymentStatus.PAID);
+        orderRepository.update(order);
+
+        notificationService.sendPaymentConfirmedNotification(order.getCustomer(), order);
+
+        System.out.println("--------------------------------------------------");
+        System.out.println("Pagamento do pedido (ID: " + order.getId() + ") processado com sucesso. Status de pagamento: " + order.getPaymentStatus());
+        System.out.println("--------------------------------------------------");
+    }
 
     public void registerDelivery(String orderId) {}
 

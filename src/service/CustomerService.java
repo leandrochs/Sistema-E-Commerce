@@ -25,7 +25,9 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    public Optional<Customer> findCustomerById(String id) {}
+    public Optional<Customer> findCustomerById(String id) {
+        return customerRepository.findById(id);
+    }
 
     public List<Customer> listAllCustomers() {}
 

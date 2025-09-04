@@ -217,7 +217,9 @@ public class OrderService {
         System.out.println("--------------------------------------------------");
     }
 
-    public Optional<Order> findOrderById(String id) {}
+    public Optional<Order> findOrderById(String id) {
+        return orderRepository.findById(id);
+    }
 
     public List<Order> listAllOrders() {}
 

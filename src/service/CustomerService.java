@@ -10,7 +10,10 @@ public class CustomerService {
     private final ICustomerRepository customerRepository;
     private final IdGenerator idGenerator;
 
-    public CustomerService(ICustomerRepository customerRepository, IdGenerator idGenerator) {}
+    public CustomerService(ICustomerRepository customerRepository, IdGenerator idGenerator) {
+        this.customerRepository = customerRepository;
+        this.idGenerator = idGenerator;
+    }
 
     public void registerCustomer(String name, String identificationDocument) {}
 

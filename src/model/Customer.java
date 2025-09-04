@@ -4,15 +4,23 @@ import java.util.UUID;
 
 public class Customer {
 
-	private UUID id;
+	private String id;
 	private String name;
 	private String identificationDocument;
 
-    public Customer(String name, String identificationDocument) {
-        this.id = UUID.randomUUID();
+    public Customer(String id, String name, String identificationDocument) {
+        this.id = id;
         this.name = name;
         this.identificationDocument = identificationDocument;
         }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
 
 

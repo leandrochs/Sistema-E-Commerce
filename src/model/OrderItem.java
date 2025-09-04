@@ -5,17 +5,30 @@ import java.util.UUID;
 
 public class OrderItem {
 
-    private final UUID id;
     private final Product product;
     private int quantity;
     private final BigDecimal saleValue;
 
-    public OrderItem(UUID id, Product product, int quantity, BigDecimal saleValue) {
-        this.id = id;
+    public OrderItem(Product product, int quantity, BigDecimal saleValue) {
         this.product = product;
         this.quantity = quantity;
         this.saleValue = saleValue;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getSaleValue() {
+        return saleValue;
+    }
 }
 

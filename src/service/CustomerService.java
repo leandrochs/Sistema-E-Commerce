@@ -29,7 +29,9 @@ public class CustomerService {
         return customerRepository.findById(id);
     }
 
-    public List<Customer> listAllCustomers() {}
+    public List<Customer> listAllCustomers() {
+        return customerRepository.findAll();
+    }
 
     public void updateCustomer(Customer customer) {}
 

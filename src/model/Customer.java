@@ -13,6 +13,14 @@ public class Customer {
         this.name = name;
         this.identificationDocument = identificationDocument;
         }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
 
 

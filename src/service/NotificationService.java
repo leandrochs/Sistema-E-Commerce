@@ -5,7 +5,15 @@ import model.Order;
 
 public class NotificationService {
 
-    public void sendPaymentPendingNotification(Customer customer, Order order) {}
+    public void sendPaymentPendingNotification(Customer customer, Order order) {
+        System.out.println("--------------------------------------------------");
+        System.out.println("E-mail para: " + customer.getName() + " (ID: " + customer.getId() + ")");
+        System.out.println("Assunto: Seu pedido #" + order.getId() + " está aguardando pagamento.");
+        System.out.println("Prezado(a) " + customer.getName() + ",");
+        System.out.println("Informamos que o seu pedido #" + order.getId() + ", criado em " + order.getCreationDate() + ", está aguardando a confirmação do pagamento.");
+        System.out.println("Agradecemos a sua compra!");
+        System.out.println("--------------------------------------------------");
+    }
 
     public void sendPaymentConfirmedNotification(Customer customer, Order order) {}
 

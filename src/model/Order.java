@@ -21,5 +21,13 @@ public class Order {
         this.items = new ArrayList<>();
 
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
 }
 

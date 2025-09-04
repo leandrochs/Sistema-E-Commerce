@@ -26,7 +26,15 @@ public class NotificationService {
         System.out.println("--------------------------------------------------");
     }
 
-    public void sendDeliveryNotification(Customer customer, Order order) {}
+    public void sendDeliveryNotification(Customer customer, Order order) {
+        System.out.println("--------------------------------------------------");
+        System.out.println("E-mail para: " + customer.getName() + " (ID: " + customer.getId() + ")");
+        System.out.println("Assunto: Seu pedido #" + order.getId() + " foi entregue!");
+        System.out.println("Prezado(a) " + customer.getName() + ",");
+        System.out.println("Confirmamos que o seu pedido #" + order.getId() + " foi entregue com sucesso!");
+        System.out.println("Esperamos que aproveite seus produtos. Qualquer dúvida, estamos à disposição.");
+        System.out.println("--------------------------------------------------");
+    }
 
 
 }

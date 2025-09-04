@@ -7,22 +7,30 @@ import java.util.UUID;
 
 public class Order {
 
-    private final UUID id;
+    private final String id;
     private final Customer customer;
     private final LocalDateTime creationDate;
     private OrderStatus status;
     private PaymentStatus paymentStatus;
     private final List<OrderItem> items;
 
-    public Order(UUID id, Customer customer, LocalDateTime creationDate) {
+    public Order(
+            String id,
+            Customer customer,
+            LocalDateTime creationDate,
+            OrderStatus status,
+            PaymentStatus paymentStatus,
+            List<OrderItem> items
+    ) {
         this.id = id;
         this.customer = customer;
         this.creationDate = creationDate;
-        this.items = new ArrayList<>();
-
+        this.status = status;
+        this.paymentStatus = paymentStatus;
+        this.items = items;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

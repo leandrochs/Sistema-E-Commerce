@@ -1,8 +1,13 @@
 package service;
 
+import model.Customer;
 import model.Order;
+import model.OrderStatus;
 import util.IdGenerator;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class OrderService {
@@ -12,15 +17,35 @@ public class OrderService {
     private final NotificationService notificationService;
     private final IdGenerator idGenerator;
 
-    public OrderService(IOrderRepository orderRepository, ICustomerRepository customerRepository, IProductRepository productRepository, NotificationService notificationService, IdGenerator idGenerator, IOrderRepository orderRepository1, ICustomerRepository customerRepository1, IProductRepository productRepository1, NotificationService notificationService1, IdGenerator idGenerator1) {
-        this.orderRepository = orderRepository1;
-        this.customerRepository = customerRepository1;
-        this.productRepository = productRepository1;
-        this.notificationService = notificationService1;
-        this.idGenerator = idGenerator1;
+    public OrderService(IOrderRepository orderRepository,
+                        ICustomerRepository customerRepository,
+                        IProductRepository productRepository,
+                        NotificationService notificationService,
+                        IdGenerator idGenerator) {
+        this.orderRepository = orderRepository;
+        this.customerRepository = customerRepository;
+        this.productRepository = productRepository;
+        this.notificationService = notificationService;
+        this.idGenerator = idGenerator;
     }
 
-    public Order createOrder(String customerId) {}
+    public Order createOrder(String customerId) {
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if (customerOptional.isEmpty()) {
+            throw new IllegalArgumentException("Cliente com ID " + customerId + " não encontrado.");
+        }
+        Customer customer = customerOptional.get();
+
+        String orderId = idGenerator.generateId();
+        LocalDateTime creationDate = LocalDateTime.now();
+        Order order = new Order(orderId, customer, creationDate, OrderStatus.OPEN, null, new ArrayList<>());
+        orderRepository.save(order);
+
+        System.out.println("--------------------------------------------------");
+        System.out.println("Pedido (ID: " + order.getId() + ") criado para o cliente '" + customer.getName() + "'. Status: " + order.getStatus());
+        System.out.println("--------------------------------------------------");
+        return order;
+    }
 
     public void addItemToOrder(String orderId, String productId, int quantity, double saleValue) {}
 

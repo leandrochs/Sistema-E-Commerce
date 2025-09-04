@@ -33,9 +33,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public void updateProduct(Product product) {}
-
-
-
-
+    public void updateProduct(Product product) {
+        productRepository.update(product);
+        System.out.println("--------------------------------------------------");
+        System.out.println("Produto '" + product.getName() + "' (ID: " + product.getId() + ") atualizado com sucesso.");
+        System.out.println("--------------------------------------------------");
+    }
 }

@@ -1,7 +1,6 @@
 package model;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public class OrderItem {
 
@@ -29,6 +28,15 @@ public class OrderItem {
 
     public BigDecimal getSaleValue() {
         return saleValue;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "product=" + product +
+                ", quantity=" + quantity +
+                ", saleValue=" + saleValue +
+                '}';
     }
 }
 

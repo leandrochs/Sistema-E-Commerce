@@ -1,0 +1,4 @@
+uuid-prod-001;Laptop XPS 15;Notebook de alta performance com tela infinita;9999.99
+uuid-prod-002;Mouse Sem Fio;Mouse ergonômico e de alta precisão;129.50
+uuid-prod-003;Teclado Mecânico;Teclado RGB com switches azuis e alta durabilidade;350.00
+uuid-prod-004;Webcam Full HD;Webcam com resolução 1080p para videochamadas;250.75

@@ -1,9 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Order {
 
@@ -60,6 +58,18 @@ public class Order {
 
     public Customer getCustomer() {
         return customer;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id='" + id + '\'' +
+                ", customer=" + customer +
+                ", creationDate=" + creationDate +
+                ", status=" + status +
+                ", paymentStatus=" + paymentStatus +
+                ", items=" + items +
+                '}';
     }
 }
 

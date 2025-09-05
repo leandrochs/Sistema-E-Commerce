@@ -1,6 +1,9 @@
 package service;
 
 import model.*;
+import repository.ICustomerRepository;
+import repository.IOrderRepository;
+import repository.IProductRepository;
 import util.IdGenerator;
 
 import java.math.BigDecimal;

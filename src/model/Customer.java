@@ -19,4 +19,8 @@ public class Customer {
     public String getName() {
         return name;
     }
+
+    public String getIdentificationDocument() {
+        return identificationDocument;
+    }
 }

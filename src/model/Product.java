@@ -1,7 +1,6 @@
 package model;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public class Product {
 
@@ -23,6 +22,14 @@ public class Product {
 
     public String getId() {
         return id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public BigDecimal getValue() {
+        return value;
     }
 }
 

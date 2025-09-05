@@ -1,6 +1,7 @@
 package service;
 
 import model.Customer;
+import repository.ICustomerRepository;
 import util.IdGenerator;
 
 import java.util.List;

@@ -1,76 +1,98 @@
 package repository;
 
 import model.Customer;
-import java.io.*;
+import util.FileUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CustomerFileRepository implements ICustomerRepository {
-    private final String fileName = "customers.txt";
 
-    @Override
-    public void save(Customer customer) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            writer.write(customer.getId() + ";" + customer.getName() + ";" + customer.getIdentificationDocument());
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private static final String FIELD_DELIMITER = ";";
+    private static final int ID_INDEX = 0;
+    private static final int NAME_INDEX = 1;
+    private static final int IDENTIFICATION_DOCUMENT_INDEX = 2;
+    private static final int EXPECTED_FIELD_COUNT = 3;
+
+    private final String filePath;
+    private final FileUtils fileUtils;
+
+    public CustomerFileRepository(String filePath, FileUtils fileUtils) {
+        this.filePath = filePath;
+        this.fileUtils = fileUtils;
     }
 
     @Override
-    public Optional<Customer> findById(UUID id) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(";");
-                UUID customerId = UUID.fromString(data[0]);
-                if (customerId.equals(id)) {
-                    return Optional.of(new Customer(customerId, data[1], data[2]));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+    public void save(Customer customer) {
+        String customerData = String.join(FIELD_DELIMITER,
+                customer.getId(),
+                customer.getName(),
+                customer.getIdentificationDocument());
+        fileUtils.writeToFile(filePath, customerData, true);
+    }
+
+    @Override
+    public Optional<Customer> findById(String id) {
+        return loadCustomers().stream()
+                .filter(customer -> customer.getId().equals(id))
+                .findFirst();
     }
 
     @Override
     public List<Customer> findAll() {
-        List<Customer> customers = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(";");
-                customers.add(new Customer(UUID.fromString(data[0]), data[1], data[2]));
+        return loadCustomers();
+    }
+
+    @Override
+    public void update(Customer updatedCustomer) {
+        List<Customer> customers = loadCustomers();
+        boolean found = false;
+        for (int i = 0; i < customers.size(); i++) {
+            if (customers.get(i).getId().equals(updatedCustomer.getId())) {
+                customers.set(i, updatedCustomer);
+                found = true;
+                break;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        if (found) {
+            writeCustomers(customers);
+        } else {
+            System.err.println("Cliente com ID " + updatedCustomer.getId() + " não encontrado para atualização.");
+        }
+    }
+
+    private List<Customer> loadCustomers() {
+        List<String> lines = fileUtils.readFromFile(filePath);
+        List<Customer> customers = new ArrayList<>();
+        for (String line : lines) {
+            if (line.trim().isEmpty()) continue;
+
+            String[] parts = line.split(FIELD_DELIMITER);
+            if (parts.length == EXPECTED_FIELD_COUNT) {
+                try {
+                    String id = parts[ID_INDEX].trim();
+                    String name = parts[NAME_INDEX].trim();
+                    String identificationDocument = parts[IDENTIFICATION_DOCUMENT_INDEX].trim();
+                    customers.add(new Customer(id, name, identificationDocument));
+                } catch (Exception e) {
+                    System.err.println("Erro ao parsear linha do cliente: \"" + line + "\". Detalhe: " + e.getMessage());
+                }
+            } else {
+                System.err.println("Formato de linha inválido no arquivo de clientes. Linha: \"" + line + "\". Esperado " + EXPECTED_FIELD_COUNT + " campos, encontrado " + parts.length + ".");
+            }
         }
         return customers;
     }
 
-    @Override
-    public void update(Customer customer) {
-        List<Customer> customers = findAll();
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
-            for (Customer c : customers) {
-                if (c.getId().equals(customer.getId())) {
-                    writer.write(customer.getId() + ";" + customer.getName() + ";" + customer.getIdentificationDocument());
-                } else {
-                    writer.write(c.getId() + ";" + c.getName() + ";" + c.getIdentificationDocument());
-                }
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void writeCustomers(List<Customer> customers) {
+        List<String> lines = customers.stream()
+                .map(customer -> String.join(FIELD_DELIMITER,
+                        customer.getId(),
+                        customer.getName(),
+                        customer.getIdentificationDocument()))
+                .collect(Collectors.toList());
+        fileUtils.writeAllToFile(filePath, lines);
     }
 }
-
-
-
-

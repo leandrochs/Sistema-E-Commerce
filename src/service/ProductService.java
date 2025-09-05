@@ -1,6 +1,7 @@
 package service;
 
 import model.Product;
+import repository.IProductRepository;
 import util.IdGenerator;
 
 import java.math.BigDecimal;

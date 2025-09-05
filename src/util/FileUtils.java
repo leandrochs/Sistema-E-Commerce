@@ -4,43 +4,49 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.nio.file.StandardOpenOption;
+import java.util.Collections;
 import java.util.List;
 
 public class FileUtils {
-    public static List<String> readAllLines(String filePath) throws IOException {
-        List<String> fileLines = new ArrayList<>();
-        Path pathToFile = Paths.get(filePath);
 
-        if (!Files.exists(pathToFile)) {
-            Files.createDirectories(pathToFile.getParent());
-            Files.createFile(pathToFile);
-            System.out.println("Arquivo criado: " + filePath);
-            return fileLines;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String currentLine;
-            while ((currentLine = reader.readLine()) != null) {
-                fileLines.add(currentLine);
+    public List<String> readFromFile(String filePath) {
+        Path path = Paths.get(filePath);
+        try {
+            if (Files.exists(path)) {
+                return Files.readAllLines(path);
             }
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o arquivo " + filePath + ": " + e.getMessage());
         }
-        return fileLines;
+        return Collections.emptyList();
     }
 
-    public static void writeLines(String filePath, List<String> lines) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) {
-            for (String lineToWrite : lines) {
-                writer.write(lineToWrite);
-                writer.newLine();
-            }
+    public void writeAllToFile(String filePath, List<String> lines) {
+        Path path = Paths.get(filePath);
+        try {
+            Files.createDirectories(path.getParent());
+            Files.write(path, lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+            System.err.println("Erro ao escrever todas as linhas no arquivo " + filePath + ": " + e.getMessage());
         }
     }
 
-    public static void appendLine(String filePath, String line) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            writer.write(line);
-            writer.newLine();
+    public void writeToFile(String filePath, String data, boolean append) {
+        Path path = Paths.get(filePath);
+        try {
+            Files.createDirectories(path.getParent());
+            if (append) {
+                Files.write(path, (data + System.lineSeparator()).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            } else {
+                Files.write(path, (data + System.lineSeparator()).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao escrever dados no arquivo " + filePath + ": " + e.getMessage());
         }
+    }
+
+    public void writeLine(String filePath, String line, boolean append) {
+        writeToFile(filePath, line, append);
     }
 }

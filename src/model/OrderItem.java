@@ -29,5 +29,14 @@ public class OrderItem {
     public BigDecimal getSaleValue() {
         return saleValue;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "product=" + product +
+                ", quantity=" + quantity +
+                ", saleValue=" + saleValue +
+                '}';
+    }
 }
 

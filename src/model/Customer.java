@@ -20,7 +20,24 @@ public class Customer {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getIdentificationDocument() {
         return identificationDocument;
+    }
+
+    public void setIdentificationDocument(String identificationDocument) {
+        this.identificationDocument = identificationDocument;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", identificationDocument='" + identificationDocument + '\'' +
+                '}';
     }
 }

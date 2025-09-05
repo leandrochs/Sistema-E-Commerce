@@ -1,0 +1,3 @@
+uuid-order-001;uuid-cust-001;2023-10-26;OPEN;PENDING_PAYMENT;uuid-prod-001,1,9500.00|uuid-prod-002,2,120.00
+uuid-order-002;uuid-cust-002;2023-10-25;FINALIZED;PAID;uuid-prod-003,1,340.00
+uuid-order-003;uuid-cust-001;2023-10-27;OPEN;PENDING_PAYMENT;uuid-prod-004,1,250.75
